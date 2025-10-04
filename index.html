@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>VoidArcade — Pro Gaming Gear</title>
+    <meta name="color-scheme" content="dark light" />
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind config for custom brand colors
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Chakra Petch', 'system-ui', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95'
+                        }
+                    },
+                    boxShadow: {
+                        neon: '0 0 24px rgba(139, 92, 246, 0.55), inset 0 0 12px rgba(139, 92, 246, 0.25)',
+                        soft3d: '0 20px 40px rgba(0,0,0,0.35), 0 6px 12px rgba(0,0,0,0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+         :root {
+            --bg: #0b0b10;
+            --surface: #111119;
+            --ink: #e8e5ff;
+            --muted: #bdb6ff;
+            --accent: #8b5cf6;
+            --accent-2: #a78bfa;
+            --glow: 0 0 40px rgba(139, 92, 246, 0.45);
+        }
+        
+        .light {
+            --bg: #f6f3ff;
+            --surface: #ffffff;
+            --ink: #1d1333;
+            --muted: #5b3cc4;
+            --accent: #6d28d9;
+            --accent-2: #8b5cf6;
+            --glow: 0 0 34px rgba(109, 40, 217, 0.35);
+        }
+        
+        html,
+        body {
+            height: 100%;
+        }
+        
+        body {
+            background: radial-gradient(1200px 800px at 80% -10%, rgba(139, 92, 246, .16), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(167, 139, 250, .14), transparent 60%), var(--bg);
+            color: var(--ink);
+            font-feature-settings: "ss01" 1, "ss02" 1;
+        }
+        
+        .glass {
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            border-radius: .8rem;
+            padding: .8rem 1rem;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+            box-shadow: var(--glow);
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            color: white;
+            font-weight: 700;
+            letter-spacing: .2px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, .6);
+            color: var(--ink);
+            box-shadow: 0 0 0 transparent;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(139, 92, 246, .12);
+        }
+        /* 3D tilt cards */
+        
+        .tilt {
+            transform-style: preserve-3d;
+            transform: perspective(900px) rotateX(0) rotateY(0);
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+            will-change: transform;
+        }
+        
+        .tilt .tilt-child {
+            transform: translateZ(36px);
+        }
+        /* 3D heading */
+        
+        .depth-title {
+            text-shadow: 0 1px 0 rgba(0, 0, 0, .35), 0 6px 14px rgba(139, 92, 246, .35), 0 20px 40px rgba(139, 92, 246, .25);
+            letter-spacing: .5px;
+        }
+        /* Floating shapes */
+        
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .float-delayed {
+            animation: float 7.5s ease-in-out 1.2s infinite;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+            50% {
+                transform: translateY(-12px)
+            }
+        }
+        /* Product gallery image vibe using SVG masks */
+        
+        .product-plate {
+            background: radial-gradient(120px 80px at 20% 20%, rgba(139, 92, 246, .25), transparent 60%), radial-gradient(160px 100px at 80% 80%, rgba(167, 139, 250, .2), transparent 60%), linear-gradient(145deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Starfield parallax in hero */
+        
+        .stars:before,
+        .stars:after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-repeat: repeat;
+            pointer-events: none;
+            opacity: .45;
+            mix-blend-mode: screen;
+        }
+        
+        .stars:before {
+            background-image: radial-gradient(1px 1px at 20% 30%, rgba(167, 139, 250, .8), transparent 60%), radial-gradient(1px 1px at 60% 70%, rgba(139, 92, 246, .8), transparent 60%), radial-gradient(1px 1px at 80% 20%, rgba(167, 139, 250, .8), transparent 60%), radial-gradient(1px 1px at 35% 85%, rgba(139, 92, 246, .8), transparent 60%);
+            background-size: 600px 600px;
+            transform: translateZ(0);
+        }
+        
+        .stars:after {
+            background-image: radial-gradient(1px 1px at 30% 20%, rgba(255, 255, 255, .75), transparent 60%), radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, .75), transparent 60%);
+            background-size: 900px 900px;
+        }
+        /* Modal base */
+        
+        .modal-backdrop {
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(6px);
+        }
+        /* Light mode fine-tuning */
+        
+        .light body {
+            background: radial-gradient(1100px 700px at 80% -10%, rgba(109, 40, 217, .12), transparent 60%), radial-gradient(800px 500px at -10% 40%, rgba(139, 92, 246, .14), transparent 60%), var(--bg);
+        }
+        
+        .light .glass {
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4));
+            border: 1px solid rgba(109, 40, 217, 0.2);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen antialiased">
+    <!-- App Wrapper -->
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- NAV -->
+        <header class="sticky top-0 z-40">
+            <div class="stars absolute inset-0 -z-10"></div>
+            <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between glass rounded-b-2xl">
+                <a href="#home" class="flex items-center gap-3">
+                    <div class="size-9 rounded-lg bg-gradient-to-br from-brand-600 to-brand-400 shadow-neon grid place-items-center">
+                        <!-- Minimal controller icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" class="text-white">
+              <path fill="currentColor" d="M7 13h2v2h2v2H9v2H7v-2H5v-2h2v-2Zm10.25 3.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5m-2-5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5M7.2 6h9.6c2.7 0 3.35 1.12 3.92 3.36l.83 3.32c.51 2.03-.61 3.32-2.75 3.32h-1.69a2 2 0 0 1-1.41-.59l-.45-.45H9.75l-.45.45a2 2 0 0 1-1.41.59H6.2c-2.14 0-3.26-1.29-2.75-3.32l.83-3.32C3.85 7.12 4.5 6 7.2 6Z"/>
+            </svg>
+                    </div>
+                    <div>
+                        <p class="font-display text-lg tracking-wide depth-title" style="color: var(--ink)">VoidArcade</p>
+                        <p class="text-xs" style="color: var(--muted)">Pro Gaming Gear</p>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#products" class="hover:opacity-90" style="color: var(--ink)">Products</a>
+                    <a href="#featured" class="hover:opacity-90" style="color: var(--ink)">Featured</a>
+                    <a href="#about" class="hover:opacity-90" style="color: var(--ink)">About</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <button id="themeToggle" class="btn-outline px-3 py-2 rounded-xl">
+            <span id="themeLabel">Light</span> / Dark
+          </button>
+                    <button id="cartBtn" class="btn px-3 py-2 rounded-xl">
+            <svg width="18" height="18" viewBox="0 0 24 24" class="opacity-90"><path fill="currentColor" d="M8 20a2 2 0 1 0 0 4a2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4a2 2 0 0 0 0-4M6.2 4l.6 3h13.2l-2 7H8l-2-10H3V2h3.2l.6 2z"/></svg>
+            <span id="cartCount" class="ml-1">0</span>
+          </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <section id="home" class="relative overflow-hidden">
+            <div class="absolute inset-0 -z-10">
+                <!-- Glow blobs -->
+                <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full blur-3xl opacity-40" style="background: radial-gradient(circle at 30% 30%, rgba(139,92,246,.45), transparent 60%);"></div>
+                <div class="absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-3xl opacity-40" style="background: radial-gradient(circle at 70% 70%, rgba(167,139,250,.45), transparent 60%);"></div>
+            </div>
+
+            <div class="mx-auto max-w-7xl px-6 pt-14 pb-10 md:pt-20 md:pb-16 grid md:grid-cols-2 gap-10 items-center">
+                <div>
+                    <h1 class="font-display text-4xl md:text-6xl lg:text-7xl font-bold depth-title leading-tight">
+                        Dominate with
+                        <span class="bg-clip-text text-transparent bg-gradient-to-b from-brand-300 to-brand-600">Precision</span>
+                    </h1>
+                    <p class="mt-4 text-base md:text-lg" style="color: var(--muted)">
+                        Explore tournament-grade keyboards, mice, headsets and controllers designed for speed, comfort and style.
+                    </p>
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <a href="#products" class="btn">Shop Products</a>
+                        <a href="#featured" class="btn btn-outline">See Featured</a>
+                    </div>
+                    <div class="mt-8 glass rounded-2xl p-4 flex items-center gap-4">
+                        <!-- Small floating badge -->
+                        <div class="size-12 rounded-xl bg-gradient-to-br from-brand-700 to-brand-500 grid place-items-center float">
+                            <svg width="26" height="26" viewBox="0 0 24 24" class="text-white">
+                <path fill="currentColor" d="M12 17q.425 0 .713-.288T13 16t-.288-.712T12 15t-.712.288T11 16t.288.713T12 17m-1-4h2V7h-2z"/>
+              </svg>
+                        </div>
+                        <p class="text-sm" style="color: var(--muted)">Free shipping over $49 · 2-year warranty · 30-day returns</p>
+                    </div>
+                </div>
+
+                <!-- 3D Showpiece: Rotating Plate with SVG Gear -->
+                <div class="relative">
+                    <div class="relative w-full aspect-square">
+                        <div class="absolute inset-0 rounded-3xl product-plate shadow-soft3d tilt" id="heroTilt">
+                            <div class="absolute inset-0 rounded-3xl overflow-hidden">
+                                <!-- Decorative rings -->
+                                <svg class="absolute inset-0" viewBox="0 0 600 600" preserveAspectRatio="none">
+                  <defs>
+                    <radialGradient id="rg" cx="50%" cy="50%">
+                      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+                      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </radialGradient>
+                    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#8b5cf6"/>
+                      <stop offset="100%" stop-color="#a78bfa"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="300" cy="300" r="280" fill="url(#rg)"/>
+                  <circle cx="300" cy="300" r="210" fill="none" stroke="url(#lg)" stroke-width="2" opacity=".6"/>
+                  <circle cx="300" cy="300" r="150" fill="none" stroke="url(#lg)" stroke-width="2" opacity=".35"/>
+                </svg>
+                            </div>
+
+                            <!-- 3D SVG Product Illustration -->
+                            <div class="absolute inset-0 grid place-items-center tilt-child">
+                                <img src="headphones.png.jpg" alt="Gaming Headphones" class="max-w-full max-h-full object-contain" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-3 left-1/2 -translate-x-1/2">
+                        <div class="px-4 py-2 rounded-xl glass text-sm" style="color: var(--muted)">3D showcase — move your cursor</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="products" class="mx-auto max-w-7xl px-6 py-12 md:py-16">
+            <div class="flex items-end justify-between gap-4">
+                <h2 class="font-display text-3xl md:text-4xl font-bold depth-title">Shop Products</h2>
+                <div class="text-sm" style="color: var(--muted)">Hand-picked essentials</div>
+            </div>
+
+            <div id="productGrid" class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product Card Template (generated via JS) -->
+            </div>
+        </section>
+
+        <!-- FEATURED -->
+        <section id="featured" class="mx-auto max-w-7xl px-6 pb-16">
+            <div class="glass rounded-3xl p-6 md:p-10 relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-72 h-72 rounded-full blur-3xl opacity-40" style="background: radial-gradient(circle, rgba(139,92,246,.45), transparent 60%);"></div>
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1">
+                        <h3 class="font-display text-2xl md:text-3xl font-bold depth-title">Featured: Nebula RGB Keyboard</h3>
+                        <p class="mt-3" style="color: var(--muted)">Hot-swappable switches, per-key RGB, and a solid aluminum chassis for zero flex and maximum flair.</p>
+                        <div class="mt-5 flex gap-3">
+                            <button class="btn" data-buy="Nebula RGB Keyboard">Buy Now — $129</button>
+                            <button class="btn btn-outline" data-preview="Nebula RGB Keyboard">Quick View</button>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <!-- 3D-ish keyboard SVG -->
+                        <div class="product-plate rounded-2xl p-6 tilt" id="featuredTilt">
+                            <div class="tilt-child">
+                                <img src="keyboard.jpg" alt="Gaming Headphones" class="max-w-full max-h-full object-contain" />
+                                <!-- We'll draw rows manually for compatibility -->
+                                <!-- Row 1 -->
+                                <g>
+                                    <rect x="40" y="60" width="40" height="30" rx="6" fill="#1b1333" stroke="#8b5cf6" opacity=".8" />
+                                    <rect x="84" y="60" width="40" height="30" rx="6" fill="#1b1333" stroke="#8b5cf6" opacity=".7" />
+                                    <rect x="128" y="60" width="40" height="30" rx="6" fill="#1b1333" stroke="#a78bfa" opacity=".7" />
+                                    <rect x="172" y="60" width="40" height="30" rx="6" fill="#1b1333" stroke="#8b5cf6" opacity=".7" />
+                                    <rect x="216" y="60" width="40" height="30" rx="6" />
+                                    <rect x="260" y="60" width="40" height="30" rx="6" />
+                                    <rect x="304" y="60" width="40" height="30" rx="6" />
+                                    <rect x="348" y="60" width="40" height="30" rx="6" />
+                                    <rect x="392" y="60" width="40" height="30" rx="6" />
+                                    <rect x="436" y="60" width="40" height="30" rx="6" />
+                                    <rect x="480" y="60" width="40" height="30" rx="6" />
+                                    <rect x="524" y="60" width="40" height="30" rx="6" />
+                                    <rect x="568" y="60" width="80" height="30" rx="6" />
+                                </g>
+                                <!-- Row 2 -->
+                                <g transform="translate(0,36)">
+                                    <rect x="40" y="60" width="50" height="30" rx="6" />
+                                    <rect x="94" y="60" width="40" height="30" rx="6" />
+                                    <rect x="138" y="60" width="40" height="30" rx="6" />
+                                    <rect x="182" y="60" width="40" height="30" rx="6" />
+                                    <rect x="226" y="60" width="40" height="30" rx="6" />
+                                    <rect x="270" y="60" width="40" height="30" rx="6" />
+                                    <rect x="314" y="60" width="40" height="30" rx="6" />
+                                    <rect x="358" y="60" width="40" height="30" rx="6" />
+                                    <rect x="402" y="60" width="40" height="30" rx="6" />
+                                    <rect x="446" y="60" width="40" height="30" rx="6" />
+                                    <rect x="490" y="60" width="40" height="30" rx="6" />
+                                    <rect x="534" y="60" width="40" height="30" rx="6" />
+                                    <rect x="578" y="60" width="70" height="30" rx="6" />
+                                </g>
+                                <!-- Row 3 -->
+                                <g transform="translate(0,72)">
+                                    <rect x="40" y="60" width="60" height="30" rx="6" />
+                                    <rect x="104" y="60" width="40" height="30" rx="6" />
+                                    <rect x="148" y="60" width="40" height="30" rx="6" />
+                                    <rect x="192" y="60" width="40" height="30" rx="6" />
+                                    <rect x="236" y="60" width="40" height="30" rx="6" />
+                                    <rect x="280" y="60" width="40" height="30" rx="6" />
+                                    <rect x="324" y="60" width="40" height="30" rx="6" />
+                                    <rect x="368" y="60" width="40" height="30" rx="6" />
+                                    <rect x="412" y="60" width="40" height="30" rx="6" />
+                                    <rect x="456" y="60" width="40" height="30" rx="6" />
+                                    <rect x="500" y="60" width="40" height="30" rx="6" />
+                                    <rect x="544" y="60" width="40" height="30" rx="6" />
+                                    <rect x="588" y="60" width="60" height="30" rx="6" />
+                                </g>
+                                <!-- Row 4 -->
+                                <g transform="translate(0,108)">
+                                    <rect x="40" y="60" width="90" height="30" rx="6" />
+                                    <rect x="134" y="60" width="40" height="30" rx="6" />
+                                    <rect x="178" y="60" width="280" height="30" rx="6" />
+                                    <rect x="462" y="60" width="40" height="30" rx="6" />
+                                    <rect x="506" y="60" width="40" height="30" rx="6" />
+                                    <rect x="550" y="60" width="98" height="30" rx="6" />
+                                </g>
+                                </g>
+                                </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-center" style="color: var(--muted)">Move your cursor to tilt</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="mx-auto max-w-7xl px-6 pb-20">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass rounded-3xl p-6">
+                    <h3 class="font-display text-2xl md:text-3xl font-bold depth-title">Built for Performance</h3>
+                    <p class="mt-3" style="color: var(--muted)">We obsess over latency, comfort and durability. Every curve, switch and grip is tested and tuned to give you an edge without sacrificing style.</p>
+                    <ul class="mt-5 space-y-2" style="color: var(--ink)">
+                        <li>• Tournament-ready switches and sensors</li>
+                        <li>• Premium metals and composites</li>
+                        <li>• Ergonomics for long sessions</li>
+                    </ul>
+                </div>
+                <div class="rounded-3xl product-plate p-6 relative overflow-hidden">
+                    <div class="float-delayed absolute -right-10 -top-12 w-72 h-72 rounded-full opacity-40 blur-3xl" style="background: radial-gradient(circle, rgba(167,139,250,.45), transparent 60%);"></div>
+                    <h4 class="font-display text-xl mb-3">Why VoidArcade?</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glass rounded-2xl p-4">
+                            <div class="text-sm" style="color: var(--muted)">Weight</div>
+                            <div class="font-bold text-xl">59g</div>
+                            <div class="text-xs" style="color: var(--muted)">Ultra-light mouse</div>
+                        </div>
+                        <div class="glass rounded-2xl p-4">
+                            <div class="text-sm" style="color: var(--muted)">Latency</div>
+                            <div class="font-bold text-xl">0.9ms</div>
+                            <div class="text-xs" style="color: var(--muted)">Wireless pro</div>
+                        </div>
+                        <div class="glass rounded-2xl p-4">
+                            <div class="text-sm" style="color: var(--muted)">Battery</div>
+                            <div class="font-bold text-xl">80h</div>
+                            <div class="text-xs" style="color: var(--muted)">Endurance mode</div>
+                        </div>
+                        <div class="glass rounded-2xl p-4">
+                            <div class="text-sm" style="color: var(--muted)">Warranty</div>
+                            <div class="font-bold text-xl">2 yrs</div>
+                            <div class="text-xs" style="color: var(--muted)">Peace of mind</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="mt-auto">
+            <div class="mx-auto max-w-7xl px-6 pb-10">
+                <div class="glass rounded-3xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div>
+                        <div class="font-display text-lg depth-title">Join the Void</div>
+                        <div class="text-sm mt-1" style="color: var(--muted)">Get early access to drops and deals.</div>
+                    </div>
+                    <form id="subscribeForm" class="flex w-full md:w-auto gap-2" novalidate>
+                        <input aria-label="Your email" type="email" required placeholder="you@example.com" class="flex-1 md:w-80 rounded-xl px-4 py-3 outline-none" style="background: var(--surface); border: 1px solid rgba(255,255,255,0.1); color: var(--ink)">
+                        <button class="btn" type="submit">Subscribe</button>
+                    </form>
+                </div>
+                <div class="text-xs mt-6 text-center" style="color: var(--muted)">© <span id="yy"></span> VoidArcade. All rights reserved.</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="modal" class="fixed inset-0 hidden items-center justify-center p-6 z-50">
+        <div class="absolute inset-0 modal-backdrop"></div>
+        <div class="relative glass rounded-3xl max-w-xl w-full p-6">
+            <button id="modalClose" class="absolute top-3 right-3 btn-outline px-2 py-1 rounded-lg">Close</button>
+            <div id="modalContent" class="space-y-3">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle with localStorage
+        (function initTheme() {
+            const root = document.documentElement;
+            const stored = localStorage.getItem('va-theme') || 'dark';
+            if (stored === 'light') root.classList.add('light');
+            document.getElementById('themeLabel').textContent = stored === 'light' ? 'Light' : 'Dark';
+        })();
+
+        document.getElementById('themeToggle').addEventListener('click', (e) => {
+            e.preventDefault();
+            const root = document.documentElement;
+            const isLight = root.classList.toggle('light');
+            localStorage.setItem('va-theme', isLight ? 'light' : 'dark');
+            document.getElementById('themeLabel').textContent = isLight ? 'Light' : 'Dark';
+        });
+
+        // Simple cart
+        let cartCount = 0;
+        const cartCountEl = document.getElementById('cartCount');
+        document.getElementById('cartBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            // playful feedback
+            const btn = e.currentTarget;
+            btn.style.transform = 'translateY(-2px) scale(1.02)';
+            setTimeout(() => btn.style.transform = '', 140);
+        });
+
+        function addToCart(name) {
+            cartCount++;
+            cartCountEl.textContent = cartCount;
+            toast(`${name} added to cart`);
+        }
+
+        // Toast message
+        function toast(msg) {
+            const el = document.createElement('div');
+            el.textContent = msg;
+            el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 glass rounded-xl px-4 py-2 text-sm z-50';
+            document.body.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translate(-50%, 14px)';
+            }, 1600);
+            setTimeout(() => el.remove(), 2200);
+        }
+
+        // Newsletter form (no navigation)
+        document.getElementById('subscribeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = e.currentTarget.querySelector('input[type="email"]');
+            if (!input.value || !/^\S+@\S+\.\S+$/.test(input.value)) {
+                toast('Please enter a valid email');
+                return;
+            }
+            toast('Subscribed! Welcome to the Void');
+            input.value = '';
+        });
+
+        // 3D tilt interaction
+        function attachTilt(el) {
+            if (!el) return;
+            const rect = () => el.getBoundingClientRect();
+
+            function move(e) {
+                const r = rect();
+                const px = (e.clientX - r.left) / r.width;
+                const py = (e.clientY - r.top) / r.height;
+                const rx = (py - .5) * -12; // rotateX
+                const ry = (px - .5) * 16; // rotateY
+                el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+            }
+
+            function leave() {
+                el.style.transform = `perspective(900px) rotateX(0deg) rotateY(0deg)`;
+            }
+            el.addEventListener('mousemove', move);
+            el.addEventListener('mouseleave', leave);
+            el.addEventListener('touchmove', (e) => {
+                if (!e.touches[0]) return;
+                const t = e.touches[0];
+                move({
+                    clientX: t.clientX,
+                    clientY: t.clientY
+                });
+            }, {
+                passive: true
+            });
+            el.addEventListener('touchend', leave);
+        }
+        attachTilt(document.getElementById('heroTilt'));
+        attachTilt(document.getElementById('featuredTilt'));
+
+        // Sample products (small set)
+        const products = [{
+            id: 'vx-mouse',
+            name: 'VX Phantom Mouse',
+            price: 89,
+            badge: 'Ultralight',
+            rating: 4.8,
+            svg: mouseSVG('#8b5cf6')
+        }, {
+            id: 'nova-headset',
+            name: 'Nebula RGB Keyboard',
+            price: 149,
+            badge: 'Surround',
+            rating: 4.9,
+            svg: headsetSVG('#a78bfa')
+        }, {
+            id: 'eclipse-pad',
+            name: 'Eclipse XL Pad',
+            price: 29,
+            badge: 'Low Friction',
+            rating: 4.6,
+            svg: padSVG('#8b5cf6')
+        }, {
+            id: 'nebula-kbd',
+            name: 'Nebula RGB Headphone',
+            price: 129,
+            badge: 'Hot-Swap',
+            rating: 4.7,
+            svg: keyboardSVG('#a78bfa')
+        }, {
+            id: 'atlas-controller',
+            name: 'Atlas Wireless Controller',
+            price: 79,
+            badge: 'Hall Effect',
+            rating: 4.5,
+            svg: controllerSVG('#8b5cf6')
+        }, {
+            id: 'quantum-stand',
+            name: 'Quantum Headset Stand',
+            price: 39,
+            badge: 'RGB Dock',
+            rating: 4.4,
+            svg: standSVG('#a78bfa')
+        }];
+
+        // Product SVG creators
+        function mouseSVG(color) {
+            return `<img src='mouse.jpg' alt='Gaming Headphones' class='max-w-full max-h-full object-contain' />`;
+        }
+
+        function headsetSVG(color) {
+            return `<img src='keyboard-3.jpg' alt='gamingkeyboard' class='max-w-full max-h-full object-contain' />`;
+        }
+
+        function padSVG(color) {
+            return `<img src='gamingpad.jpg' alt='gaming pads' class='max-w-full max-h-full object-contain' />`;
+        }
+
+        function keyboardSVG(color) {
+            return `<img src='headphone-2.jpg' alt='gaming keyboard' class='max-w-full max-h-full object-contain' />`;
+        }
+
+        function controllerSVG(color) {
+            return `<img src='controller.jpg' alt='gaming controlles' class='max-w-full max-h-full object-contain' />`;
+        }
+
+        function standSVG(color) {
+            return `<img src='headphonestand.jpg' alt='gaming stands' class='max-w-full max-h-full object-contain' />`;
+        }
+
+        // Render products
+        const grid = document.getElementById('productGrid');
+
+        function productCard(p) {
+            return `
+      <article class="tilt group glass rounded-3xl overflow-hidden border border-transparent hover:border-brand-500 transition-shadow">
+        <div class="bg-[rgba(255,255,255,0.02)]">
+          <div class="p-5">
+            <div class="rounded-2xl product-plate p-4">
+              <div class="tilt-child">${p.svg}</div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <div>
+                <h4 class="font-semibold">${p.name}</h4>
+                <div class="text-xs mt-1" style="color: var(--muted)">
+                  <span class="px-2 py-0.5 rounded-full border border-[rgba(255,255,255,0.12)]">${p.badge}</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-bold">$${p.price}</div>
+                <div class="text-xs" style="color: var(--muted)">★ ${p.rating}</div>
+              </div>
+            </div>
+            <div class="mt-4 flex gap-3">
+              <button class="btn flex-1" data-buy="${p.name}">Add to cart</button>
+              <button class="btn btn-outline flex-1" data-preview="${p.name}">Quick view</button>
+            </div>
+          </div>
+        </div>
+      </article>`;
+        }
+
+        function renderProducts() {
+            const html = products.map(productCard).join('');
+            grid.innerHTML = html;
+            // Attach tilt to each card selectively
+            grid.querySelectorAll('.tilt').forEach(attachTilt);
+            // Wire up buttons
+            grid.querySelectorAll('[data-buy]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    addToCart(e.currentTarget.getAttribute('data-buy'));
+                });
+            });
+            grid.querySelectorAll('[data-preview]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal(e.currentTarget.getAttribute('data-preview'));
+                });
+            });
+        }
+        renderProducts();
+
+        // Modal logic
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
+        document.getElementById('modalClose').addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal();
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        function openModal(name) {
+            const p = products.find(x => x.name === name) || null;
+            modalContent.innerHTML = `
+        <div class="flex items-start gap-4">
+          <div class="w-36 h-36 rounded-2xl product-plate p-3">${p ? p.svg : ''}</div>
+          <div class="flex-1">
+            <h3 class="font-display text-2xl font-bold">${name}</h3>
+            <p class="text-sm mt-1" style="color: var(--muted)">Engineered for elite play with our black & violet DNA.</p>
+            <div class="mt-3 font-bold">$${p ? p.price : '—'}</div>
+            <div class="mt-4 flex gap-3">
+              <button class="btn" id="buyNow">Add to cart</button>
+              <button class="btn btn-outline" id="visit">Continue Shopping</button>
+            </div>
+          </div>
+        </div>
+      `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('buyNow').addEventListener('click', (e) => {
+                e.preventDefault();
+                addToCart(name);
+                closeModal();
+            });
+            document.getElementById('visit').addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal();
+            });
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Featured buttons
+        document.querySelectorAll('[data-buy]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                addToCart(e.currentTarget.getAttribute('data-buy'));
+            });
+        });
+        document.querySelectorAll('[data-preview]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(e.currentTarget.getAttribute('data-preview'));
+            });
+        });
+
+        // Year
+        document.getElementById('yy').textContent = new Date().getFullYear();
+    </script>
+    <script>
+        (function() {
+            function c() {
+                var b = a.contentDocument || a.contentWindow.document;
+                if (b) {
+                    var d = b.createElement('script');
+                    d.innerHTML = "window.__CF$cv$params={r:'98184c65b00cc1b0',t:'MTc1ODI3NjY4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                    b.getElementsByTagName('head')[0].appendChild(d)
+                }
+            }
+            if (document.body) {
+                var a = document.createElement('iframe');
+                a.height = 1;
+                a.width = 1;
+                a.style.position = 'absolute';
+                a.style.top = 0;
+                a.style.left = 0;
+                a.style.border = 'none';
+                a.style.visibility = 'hidden';
+                document.body.appendChild(a);
+                if ('loading' !== document.readyState) c();
+                else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
+                else {
+                    var e = document.onreadystatechange || function() {};
+                    document.onreadystatechange = function(b) {
+                        e(b);
+                        'loading' !== document.readyState && (document.onreadystatechange = e, c())
+                    }
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>
